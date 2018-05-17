@@ -79,7 +79,6 @@ class kb_BatchAppTest(unittest.TestCase):
 
     def loadSingleEndReads(self):
         if hasattr(self.__class__, 'se_reads_ref'):
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  returning se_reads_ref")
             return self.__class__.se_reads_ref
         # return '23735/2/1'
         fq_path = os.path.join(self.scratch, 'reads_1_se.fq')
