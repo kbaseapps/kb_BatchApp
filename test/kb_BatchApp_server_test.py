@@ -98,9 +98,10 @@ class kb_BatchAppTest(unittest.TestCase):
 
         print("............  TESTING   ...........")
 
-        #se_reads_ref = self.loadSingleEndReads()
+        se_reads_ref = self.loadSingleEndReads()
 
-        se_reads_ref = "31433/2;30155/1/1"
+        #se_reads_ref = "31433/2;30155/1/1"
+
         batch_input = {
             'app_id': 'kb_ea_utils',
             'method': 'get_fastq_ea_utils_stats',
