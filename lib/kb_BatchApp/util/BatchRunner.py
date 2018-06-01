@@ -1,6 +1,7 @@
 from pprint import pprint
 
 import copy
+import re
 
 from Workspace.WorkspaceClient import Workspace
 from KBParallel.KBParallelClient import KBParallel
