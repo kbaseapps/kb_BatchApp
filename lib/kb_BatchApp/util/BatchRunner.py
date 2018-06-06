@@ -43,44 +43,41 @@ class BatchRunner(object):
         return 'release'
 
     def run(self, params):
-        #
-        # validated_params = self.validate_params(params)
-        validated_params = params
-        num_params = len(validated_params.get('batch_params'))
+        self.validate_params(params)  # raises an exception if there's a failure. see that function for details.
 
-        app_info = {'module_name': validated_params.get('app_id'),
-                    'function_name': validated_params.get('method'),
-                    'version': validated_params.get('service_ver')}
+        app_info = {
+            'module_name': params['module_name'],
+            'function_name': params['method_name'],
+            'version': params['service_ver']
+        }
 
-        if num_params >= 1:
-            params_list = validated_params.get('batch_params')
-            print('Running on set of parameters =')
-            pprint(params_list)
+        params_list = params.get('batch_params')
+        print('Running on set of parameters =')
+        pprint(params_list)
 
-            tasks = []
-            for input_params in params_list:
-                tasks.append(self.build_single_execution_task(app_info, input_params))
+        tasks = []
+        for input_params in params_list:
+            tasks.append(self.build_single_execution_task(app_info, input_params))
 
-            batch_run_params = {'tasks': tasks,
-                                'runner': 'parallel',
-                                'max_retries': 2}
+        batch_run_params = {
+            'tasks': tasks,
+            'runner': 'parallel',
+            'max_retries': 2
+        }
 
-            # TODO check if this should be given in input
-            batch_run_params['concurrent_local_tasks'] = 1
-            batch_run_params['concurrent_njsw_tasks'] = 0
+        # TODO check if this should be given in input
+        batch_run_params['concurrent_local_tasks'] = 1
+        batch_run_params['concurrent_njsw_tasks'] = 0
 
-            print("========================  BATCH_RUN_PARAMS  ====================")
-            pprint(batch_run_params)
-            print("================================================================")
+        print("========================  BATCH_RUN_PARAMS  ====================")
+        pprint(batch_run_params)
+        print("================================================================")
 
-            results = self.parallel_runner.run_batch(batch_run_params)
-            print('Batch run results=')
-            pprint(results)
+        results = self.parallel_runner.run_batch(batch_run_params)
+        print('Batch run results=')
+        pprint(results)
 
-            return results
-
-        raise ('Improper number of method parameters')
-
+        return results
 
     def build_single_execution_task(self, app_info, params):
         task_params = copy.deepcopy(params.get('params')[0])
@@ -90,11 +87,31 @@ class BatchRunner(object):
         return retVal
 
     def clean(self, run_output_info):
-        ''' Not really necessary on a single run, but if we are running multiple local subjobs, we
-        should clean up files that have already been saved back up to kbase '''
+        """
+        Not really necessary on a single run, but if we are running multiple local subjobs, we
+        should clean up files that have already been saved back up to KBase.
+        """
         pass
 
     def validate_params(self, params):
-        # TODO Add validation if needed
+        """
+        Things to validate.
+        params.module_name and params.method_name are real (maybe just let that go and assume they're ok)
+        params.wsid is a real workspace id and the current user has write-access.
+        params.batch_params is a list with len > 0
+        """
+        if params.get("batch_params", None) is None or (isinstance(params["batch_params"], list) and len(params["batch_params"]) == 0):
+            raise ValueError("batch_params must be a list with a length >= 1")
+        if params.get("module_name") is None:
+            raise ValueError("module_name must be an existing KBase app module!")
+        elif "." in params["module_name"] or "/" in params["module_name"]:
+            raise ValueError("module_name should just be the name of the module, NOT the full module.method")
+        if params.get("method_name") is None:
+            raise ValueError("method_name must be an existing KBase app method!")
+        elif "." in params["method_name"] or "/" in params["method_name"]:
+            raise ValueError("method_name should just be the name of the method, NOT the full module.method")
+        if params.get("service_ver") is None or not isinstance(params["service_ver"], basestring):
+            raise ValueError("service_ver must be a valid string!")
+        if params.get("wsid") is None:
+            raise ValueError("A workspace id must be provided to associate each subjob!")
         return params
-
