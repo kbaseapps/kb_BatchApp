@@ -16,7 +16,12 @@ import us.kbase.common.service.UnauthorizedException;
 /**
  * <p>Original spec-file module name: kb_BatchApp</p>
  * <pre>
- * A KBase module: kb_BatchApp
+ * kb_BatchApp
+ * -----------
+ * This contains tools for running batch jobs.
+ * In this first pass, a "batch" is defined as multiple parallel runs of a single job. Each job's inputs and outputs should
+ * be treated as independent of each other. An example might be a parameter sweep for a single app, or importing a list of
+ * files using the same parameters, just being run multiple times.
  * </pre>
  */
 public class KbBatchAppClient {
@@ -165,6 +170,7 @@ public class KbBatchAppClient {
     /**
      * <p>Original spec-file function name: run_batch</p>
      * <pre>
+     * Runs a batch of the same app with a number of different input parameters.
      * </pre>
      * @param   params   instance of type {@link us.kbase.kbbatchapp.BatchInput BatchInput}
      * @return   parameter "returnVal" of type {@link us.kbase.kbbatchapp.BatchResult BatchResult}

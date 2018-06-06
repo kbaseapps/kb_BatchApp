@@ -13,7 +13,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * <p>Original spec-file type: MetaInput</p>
- * 
+ * <pre>
+ * Describes the metadata for a single batch run. Passed along to the Narrative Job Service on each child
+ * job started.
+ * ----------
+ * cell_id - the unique id for the Narrative cell that starts the batch.
+ * run_id - the unique id assigned to the run from the Narrative.
+ * tag - the version tag (one of "release", "beta" or "dev") for the app being run in batch.
+ * </pre>
  * 
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
