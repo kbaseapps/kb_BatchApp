@@ -103,8 +103,8 @@ class kb_BatchAppTest(unittest.TestCase):
         #se_reads_ref = "31433/2;30155/1/1"
 
         batch_input = {
-            'app_id': 'kb_ea_utils',
-            'method': 'get_fastq_ea_utils_stats',
+            'module_name': 'kb_ea_utils',
+            'method_name': 'get_fastq_ea_utils_stats',
             'meta': {
                 'tag': 'release'
             },

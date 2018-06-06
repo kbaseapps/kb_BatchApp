@@ -14,14 +14,23 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * <p>Original spec-file type: BatchInput</p>
- * 
+ * <pre>
+ * The inputs for a batch run on a single app.
+ * ----------
+ * module_name - the name of the module to run. In an app like "MEGAHIT.run_megahit", this would be "MEGAHIT"
+ * method_name - the name of the method to run in the module. In the above, this would be "run_megahit"
+ * service_ver - the version of the app to run (or a github hash)
+ * wsid - the id of the workspace to associate with the job for sharing purposes
+ * meta - the job metadata
+ * batch_params - the list of input parameters for the app.
+ * </pre>
  * 
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("com.googlecode.jsonschema2pojo")
 @JsonPropertyOrder({
-    "app_id",
-    "method",
+    "module_name",
+    "method_name",
     "service_ver",
     "wsid",
     "meta",
@@ -29,17 +38,24 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 })
 public class BatchInput {
 
-    @JsonProperty("app_id")
-    private String appId;
-    @JsonProperty("method")
-    private String method;
+    @JsonProperty("module_name")
+    private String moduleName;
+    @JsonProperty("method_name")
+    private String methodName;
     @JsonProperty("service_ver")
     private String serviceVer;
     @JsonProperty("wsid")
     private String wsid;
     /**
      * <p>Original spec-file type: MetaInput</p>
-     * 
+     * <pre>
+     * Describes the metadata for a single batch run. Passed along to the Narrative Job Service on each child
+     * job started.
+     * ----------
+     * cell_id - the unique id for the Narrative cell that starts the batch.
+     * run_id - the unique id assigned to the run from the Narrative.
+     * tag - the version tag (one of "release", "beta" or "dev") for the app being run in batch.
+     * </pre>
      * 
      */
     @JsonProperty("meta")
@@ -48,33 +64,33 @@ public class BatchInput {
     private List<ParamsInput> batchParams;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("app_id")
-    public String getAppId() {
-        return appId;
+    @JsonProperty("module_name")
+    public String getModuleName() {
+        return moduleName;
     }
 
-    @JsonProperty("app_id")
-    public void setAppId(String appId) {
-        this.appId = appId;
+    @JsonProperty("module_name")
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
     }
 
-    public BatchInput withAppId(String appId) {
-        this.appId = appId;
+    public BatchInput withModuleName(String moduleName) {
+        this.moduleName = moduleName;
         return this;
     }
 
-    @JsonProperty("method")
-    public String getMethod() {
-        return method;
+    @JsonProperty("method_name")
+    public String getMethodName() {
+        return methodName;
     }
 
-    @JsonProperty("method")
-    public void setMethod(String method) {
-        this.method = method;
+    @JsonProperty("method_name")
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
     }
 
-    public BatchInput withMethod(String method) {
-        this.method = method;
+    public BatchInput withMethodName(String methodName) {
+        this.methodName = methodName;
         return this;
     }
 
@@ -110,7 +126,14 @@ public class BatchInput {
 
     /**
      * <p>Original spec-file type: MetaInput</p>
-     * 
+     * <pre>
+     * Describes the metadata for a single batch run. Passed along to the Narrative Job Service on each child
+     * job started.
+     * ----------
+     * cell_id - the unique id for the Narrative cell that starts the batch.
+     * run_id - the unique id assigned to the run from the Narrative.
+     * tag - the version tag (one of "release", "beta" or "dev") for the app being run in batch.
+     * </pre>
      * 
      */
     @JsonProperty("meta")
@@ -120,7 +143,14 @@ public class BatchInput {
 
     /**
      * <p>Original spec-file type: MetaInput</p>
-     * 
+     * <pre>
+     * Describes the metadata for a single batch run. Passed along to the Narrative Job Service on each child
+     * job started.
+     * ----------
+     * cell_id - the unique id for the Narrative cell that starts the batch.
+     * run_id - the unique id assigned to the run from the Narrative.
+     * tag - the version tag (one of "release", "beta" or "dev") for the app being run in batch.
+     * </pre>
      * 
      */
     @JsonProperty("meta")
@@ -160,7 +190,7 @@ public class BatchInput {
 
     @Override
     public String toString() {
-        return ((((((((((((((("BatchInput"+" [appId=")+ appId)+", method=")+ method)+", serviceVer=")+ serviceVer)+", wsid=")+ wsid)+", meta=")+ meta)+", batchParams=")+ batchParams)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((((("BatchInput"+" [moduleName=")+ moduleName)+", methodName=")+ methodName)+", serviceVer=")+ serviceVer)+", wsid=")+ wsid)+", meta=")+ meta)+", batchParams=")+ batchParams)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

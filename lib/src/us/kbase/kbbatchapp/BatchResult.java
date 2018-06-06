@@ -9,11 +9,18 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import us.kbase.common.service.UObject;
 
 
 /**
  * <p>Original spec-file type: BatchResult</p>
- * 
+ * <pre>
+ * The results of a batch run.
+ * --------
+ * batch_result - a mapping from a string (child job id) to the result for that child job
+ * report_name - the name of the report for the entire batch run
+ * report_ref - the UPA of the report for the entire batch run
+ * </pre>
  * 
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -26,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class BatchResult {
 
     @JsonProperty("batch_result")
-    private Map<String, String> batchResult;
+    private Map<String, UObject> batchResult;
     @JsonProperty("report_name")
     private java.lang.String reportName;
     @JsonProperty("report_ref")
@@ -34,16 +41,16 @@ public class BatchResult {
     private Map<java.lang.String, Object> additionalProperties = new HashMap<java.lang.String, Object>();
 
     @JsonProperty("batch_result")
-    public Map<String, String> getBatchResult() {
+    public Map<String, UObject> getBatchResult() {
         return batchResult;
     }
 
     @JsonProperty("batch_result")
-    public void setBatchResult(Map<String, String> batchResult) {
+    public void setBatchResult(Map<String, UObject> batchResult) {
         this.batchResult = batchResult;
     }
 
-    public BatchResult withBatchResult(Map<String, String> batchResult) {
+    public BatchResult withBatchResult(Map<String, UObject> batchResult) {
         this.batchResult = batchResult;
         return this;
     }

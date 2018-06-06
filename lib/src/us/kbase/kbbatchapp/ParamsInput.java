@@ -15,7 +15,13 @@ import us.kbase.common.service.UObject;
 
 /**
  * <p>Original spec-file type: ParamsInput</p>
- * 
+ * <pre>
+ * Describes the parameters for a single run in a batch. This contains both the set of parameters
+ * for a given run, along with the list of object UPAs to be used in setting provenance.
+ * ----------
+ * params - an arbitrary list of inputs for the job run.
+ * source_ws_objects - the list of UPAs used as inputs to this job. These should be reflected somewhere in params.
+ * </pre>
  * 
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -27,22 +33,22 @@ import us.kbase.common.service.UObject;
 public class ParamsInput {
 
     @JsonProperty("params")
-    private List<Map<String, UObject>> params;
+    private List<UObject> params;
     @JsonProperty("source_ws_objects")
     private List<String> sourceWsObjects;
     private Map<java.lang.String, Object> additionalProperties = new HashMap<java.lang.String, Object>();
 
     @JsonProperty("params")
-    public List<Map<String, UObject>> getParams() {
+    public List<UObject> getParams() {
         return params;
     }
 
     @JsonProperty("params")
-    public void setParams(List<Map<String, UObject>> params) {
+    public void setParams(List<UObject> params) {
         this.params = params;
     }
 
-    public ParamsInput withParams(List<Map<String, UObject>> params) {
+    public ParamsInput withParams(List<UObject> params) {
         this.params = params;
         return this;
     }
