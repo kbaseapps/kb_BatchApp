@@ -6,8 +6,8 @@ import re
 from Workspace.WorkspaceClient import Workspace
 from KBParallel.KBParallelClient import KBParallel
 
-class BatchRunner(object):
 
+class BatchRunner(object):
     def __init__(self, scratch_dir, workspace_url, callback_url, srv_wiz_url, provenance):
         self.scratch_dir = scratch_dir
         self.workspace_url = workspace_url
@@ -66,16 +66,22 @@ class BatchRunner(object):
         }
 
         # TODO check if this should be given in input
-        batch_run_params['concurrent_local_tasks'] = 1
-        batch_run_params['concurrent_njsw_tasks'] = 0
+        batch_run_params['concurrent_local_tasks'] = 0
+        batch_run_params['concurrent_njsw_tasks'] = 5
 
         print("========================  BATCH_RUN_PARAMS  ====================")
         pprint(batch_run_params)
         print("================================================================")
 
-        results = self.parallel_runner.run_batch(batch_run_params)
+        batch_results = self.parallel_runner.run_batch(batch_run_params)
         print('Batch run results=')
-        pprint(results)
+        pprint(batch_results)
+
+        results = {
+            'batch_results': dict()
+        }
+        for result in batch_results['results']:
+            results['batch_results'][result['result_package']['run_context']['job_id']] = result
 
         return results
 

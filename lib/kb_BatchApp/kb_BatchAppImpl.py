@@ -93,8 +93,7 @@ files using the same parameters, just being run multiple times.
         batchRunner = BatchRunner(self.scratch_dir, self.workspace_url,
                                   self.callback_url, self.srv_wiz_url,
                                                   ctx.provenance())
-        result = batchRunner.run(params)
-        returnVal = {'result': result}
+        returnVal = batchRunner.run(params)
         #END run_batch
 
         # At some point might do deeper type checking...
