@@ -125,5 +125,11 @@ class kb_BatchAppTest(unittest.TestCase):
         }
 
         retVal = self.getImpl().run_batch(self.ctx, batch_input)[0]
+        print("TEST RUN RESULTS\n================")
+        pprint(retVal)
 
-        self.assertEquals(retVal.get('result').get('results')[0].get('is_error'), 0)
+        self.assertIn('batch_results', retVal)
+        self.assertEqual(len(retVal['batch_results'].keys()), 2)
+        for child_id, child_job in retVal['batch_results'].items():
+            self.assertIn('result_package', child_job)
+            self.assertEqual(child_id, child_job['result_package']['run_context']['job_id'])
