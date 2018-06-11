@@ -1,0 +1,29 @@
+name: Run App Batch
+subtitle: Run a batch of a single app
+tooltip: Run a batch of a single app
+
+screenshots:
+  []
+
+suggestions:
+  apps:
+    related:
+      []
+    next:
+      []
+  methods:
+    related:
+      []
+    next:
+      []
+
+parameters:
+  batch_inputs:
+    ui-name: Batch Inputs
+    short-hint: batch inputs
+    long-hint: batch inputs
+
+description: |
+  <p>Runs a batch of a single app and returns all the results. No parameter mapping or anything is given, as this is just here to help with automatic processing</p>
+
+technical-description: none
