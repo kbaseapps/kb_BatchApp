@@ -23,7 +23,7 @@ class BatchRunner(object):
         print('Running kb_BatchApp version = ' + self.my_version)
 
         self.ws = Workspace(self.workspace_url)
-        self.parallel_runner = KBParallel(self.callback_url)
+        self.parallel_runner = KBParallel(self.callback_url, service_ver='dev')
 
     def get_version_from_subactions(self, module_name, subactions):
         # go through each sub action looking for
