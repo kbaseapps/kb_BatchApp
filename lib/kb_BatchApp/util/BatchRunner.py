@@ -21,9 +21,9 @@ class BatchRunner(object):
 
         # from the provenance, extract out the version to run by exact hash if possible
         self.my_version = 'release'
-        if len(provenance) > 0:
-            if 'subactions' in provenance[0]:
-                self.my_version = self.get_version_from_subactions('kb_BatchApp', provenance[0]['subactions'])
+        if len(self.provenance) > 0:
+            if 'subactions' in self.provenance[0]:
+                self.my_version = self.get_version_from_subactions('kb_BatchApp', self.provenance[0]['subactions'])
         print('Running kb_BatchApp version = ' + self.my_version)
 
         self.ws = Workspace(self.workspace_url)
