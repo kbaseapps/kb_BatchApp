@@ -8,12 +8,16 @@ from KBParallel.KBParallelClient import KBParallel
 
 
 class BatchRunner(object):
-    def __init__(self, scratch_dir, workspace_url, callback_url, srv_wiz_url, provenance):
+    def __init__(self, scratch_dir, workspace_url, callback_url, srv_wiz_url, context):
         self.scratch_dir = scratch_dir
         self.workspace_url = workspace_url
         self.callback_url = callback_url
         self.srv_wiz_url = srv_wiz_url
-        self.provenance = provenance
+        self.provenance = context.provenance
+        self.job_id = None
+        current_call_ctx = context.get('rpc_context', {}).get('call_stack')
+        if len(current_call_ctx):
+            self.job_id = current_call_ctx[0].get('job_id')
 
         # from the provenance, extract out the version to run by exact hash if possible
         self.my_version = 'release'
@@ -62,7 +66,8 @@ class BatchRunner(object):
         batch_run_params = {
             'tasks': tasks,
             'runner': 'parallel',
-            'max_retries': 2
+            'max_retries': 2,
+            'parent_job_id': self.job_id
         }
 
         # TODO check if this should be given in input
