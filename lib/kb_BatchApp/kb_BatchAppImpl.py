@@ -92,7 +92,7 @@ files using the same parameters, just being run multiple times.
         print("===================================================")
         batchRunner = BatchRunner(self.scratch_dir, self.workspace_url,
                                   self.callback_url, self.srv_wiz_url,
-                                                  ctx.provenance())
+                                  ctx)
         returnVal = batchRunner.run(params)
         #END run_batch
 
