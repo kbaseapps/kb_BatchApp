@@ -13,7 +13,7 @@ class BatchRunner(object):
         self.workspace_url = workspace_url
         self.callback_url = callback_url
         self.srv_wiz_url = srv_wiz_url
-        self.provenance = context.provenance
+        self.provenance = context.provenance()
         self.job_id = None
         current_call_ctx = context.get('rpc_context', {}).get('call_stack')
         if len(current_call_ctx):
