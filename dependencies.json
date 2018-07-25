@@ -1,4 +1,8 @@
 [ {
+  "module_name" : "KBaseReport",
+  "type" : "sdk",
+  "version_tag" : "release"
+}, {
   "module_name" : "KBParallel",
   "type" : "sdk",
   "version_tag" : "dev"

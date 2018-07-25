@@ -5,6 +5,7 @@ import re
 
 from Workspace.WorkspaceClient import Workspace
 from KBParallel.KBParallelClient import KBParallel
+from batchreport import build_report
 
 
 class BatchRunner(object):
@@ -87,6 +88,8 @@ class BatchRunner(object):
         }
         for result in batch_results['results']:
             results['batch_results'][result['result_package']['run_context']['job_id']] = result
+
+        results['report_name'], results['report_ref'] = build_report(self.callback_url, self.scratch_dir, results['batch_results'])
 
         return results
 
