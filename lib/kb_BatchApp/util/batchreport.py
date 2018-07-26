@@ -3,7 +3,7 @@ from time import time
 import os
 
 
-def build_report(callback_url, scratch_dir, results, batch_size):
+def build_report(callback_url, scratch_dir, results, batch_size, workspace_id):
     """
     Expects a sets of batch results in the format given by the spec.
     That is, a dict, mapping each child job id to the result of that job provided by KBParallel.
@@ -11,16 +11,24 @@ def build_report(callback_url, scratch_dir, results, batch_size):
     This uses those results to generate an HTML report, and returns a tuple of (report_name, report_ref)
     """
     report_client = KBaseReport(callback_url)
+    timestamp = int(time() * 1000)
+    report_name = "batch_report_{}".format(timestamp)
+    report_dir = os.path.join(scratch_dir, report_name)
+    os.makedirs(report_dir)
 
-    write_html(scratch_dir, results, batch_size)
+    html_info = write_html(report_dir, results, batch_size)
+    report = report_client.create_extended_report({
+        "html_links": [html_info],
+        "direct_html_link_index": 0,
+        "report_object_name": report_name,
+        "workspace_id": int(workspace_id)
+    })
+    return (report['name'], report['ref'])
 
 
-def write_html(scratch_dir, results, batch_size):
-    timestamp = int(time.time() * 1000)
-    output_dir = os.path.join(scratch_dir, "batch_report_{}".format(timestamp))
-    os.makedirs(output_dir)
-
-    html_file_name = os.path.join(output_dir, "index.html")
+def write_html(report_dir, results, batch_size):
+    html_file_name = "index.html"
+    html_file_path = os.path.join(report_dir, html_file_name)
 
     """
     Something like:
@@ -55,8 +63,14 @@ def write_html(scratch_dir, results, batch_size):
 
     html_content = "<html>{}<br>{}</html>".format(header, job_table)
 
-    with open(html_file_name, "w") as outfile:
+    with open(html_file_path, "w") as outfile:
         outfile.write(html_content)
+
+    return {
+        "path": report_dir,
+        "name": "index.html",
+        "description": "Batch Report"
+    }
 
 
 def calc_run_time(results):
@@ -67,7 +81,7 @@ def calc_run_time(results):
         run_time = end_time - start_time
         if (run_time > 0):
             total_ms = total_ms + run_time
-    s = divmod(total_ms, 1000)
+    s, ms = divmod(total_ms, 1000)
     m, s = divmod(s, 60)
     h, m = divmod(m, 60)
     d, h = divmod(h, 24)

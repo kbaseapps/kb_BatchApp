@@ -16,9 +16,11 @@ class BatchRunner(object):
         self.srv_wiz_url = srv_wiz_url
         self.provenance = context.provenance()
         self.job_id = None
-        current_call_ctx = context.get('rpc_context', {}).get('call_stack')
-        if len(current_call_ctx):
-            self.job_id = current_call_ctx[0].get('job_id')
+        rpc_context = context.get('rpc_context')
+        if rpc_context is not None and hasattr(rpc_context, 'get'):
+            current_call_ctx = rpc_context.get('call_stack')
+            if len(current_call_ctx):
+                self.job_id = current_call_ctx[0].get('job_id')
 
         # from the provenance, extract out the version to run by exact hash if possible
         self.my_version = 'release'
@@ -67,9 +69,10 @@ class BatchRunner(object):
         batch_run_params = {
             'tasks': tasks,
             'runner': 'parallel',
-            'max_retries': 2,
-            'parent_job_id': self.job_id
+            'max_retries': 2
         }
+        if self.job_id is not None:
+            batch_run_params['parent_job_id'] = self.job_id
 
         # TODO check if this should be given in input
         batch_run_params['concurrent_local_tasks'] = 0
@@ -89,7 +92,9 @@ class BatchRunner(object):
         for result in batch_results['results']:
             results['batch_results'][result['result_package']['run_context']['job_id']] = result
 
-        results['report_name'], results['report_ref'] = build_report(self.callback_url, self.scratch_dir, results['batch_results'])
+        results['report_name'], results['report_ref'] = build_report(
+            self.callback_url, self.scratch_dir, results['batch_results'], len(params_list), params['wsid']
+        )
 
         return results
 
