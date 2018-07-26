@@ -59,25 +59,37 @@ class kb_BatchAppTest(unittest.TestCase):
             cls.wsClient.delete_workspace({'workspace': cls.wsName})
             print('Test workspace was deleted')
 
-    def getWsClient(self):
+    def get_ws_client(self):
         return self.__class__.wsClient
 
-    def getWsName(self):
-        if hasattr(self.__class__, 'wsName'):
-            return self.__class__.wsName
+    def _create_workspace(self):
         suffix = int(time.time() * 1000)
-        wsName = "test_kb_BatchApp_" + str(suffix)
-        ret = self.getWsClient().create_workspace({'workspace': wsName})  # noqa
-        self.__class__.wsName = wsName
-        return wsName
+        ws_name = "test_kb_BatchApp_" + str(suffix)
+        ret = self.get_ws_client().create_workspace({'workspace': ws_name})
+        self.__class__.ws_name = ws_name
+        self.__class__.wsid = ret[0]
 
-    def getImpl(self):
+    def get_ws_name(self):
+        if hasattr(self.__class__, 'ws_name'):
+            return self.__class__.ws_name
+        else:
+            self._create_workspace()
+            return self.__class__.ws_name
+
+    def get_ws_id(self):
+        if hasattr(self.__class__, 'wsid'):
+            return self.__class__.wsid
+        else:
+            self._create_workspace()
+            return self.__class__.wsid
+
+    def get_impl(self):
         return self.__class__.serviceImpl
 
-    def getContext(self):
+    def get_context(self):
         return self.__class__.ctx
 
-    def loadSingleEndReads(self):
+    def load_single_end_reads(self):
         if hasattr(self.__class__, 'se_reads_ref'):
             return self.__class__.se_reads_ref
         # return '23735/2/1'
@@ -86,7 +98,7 @@ class kb_BatchAppTest(unittest.TestCase):
 
         ru = ReadsUtils(self.callback_url)
         se_reads_ref = ru.upload_reads({'fwd_file': fq_path,
-                                        'wsname': self.getWsName(),
+                                        'wsname': self.get_ws_name(),
                                         'name': 'test_readsSE',
                                         'sequencing_tech': 'artificial reads'})['obj_ref']
         self.__class__.se_reads_ref = se_reads_ref
@@ -98,10 +110,9 @@ class kb_BatchAppTest(unittest.TestCase):
 
         print("............  TESTING   ...........")
 
-        se_reads_ref = self.loadSingleEndReads()
+        se_reads_ref = self.load_single_end_reads()
 
         #se_reads_ref = "31433/2;30155/1/1"
-
         batch_input = {
             'module_name': 'kb_ea_utils',
             'method_name': 'get_fastq_ea_utils_stats',
@@ -109,7 +120,7 @@ class kb_BatchAppTest(unittest.TestCase):
                 'tag': 'release'
             },
             'service_ver': '1.1.0',
-            'wsid': '30155',
+            'wsid': self.get_ws_id(),
             'batch_params': [
                 {
                     'params': [{
@@ -124,7 +135,10 @@ class kb_BatchAppTest(unittest.TestCase):
             ]
         }
 
-        retVal = self.getImpl().run_batch(self.ctx, batch_input)[0]
+        ctx = self.get_context()
+        print("CONTEXT")
+        pprint(ctx)
+        retVal = self.get_impl().run_batch(ctx, batch_input)[0]
         print("TEST RUN RESULTS\n================")
         pprint(retVal)
 
@@ -133,3 +147,7 @@ class kb_BatchAppTest(unittest.TestCase):
         for child_id, child_job in retVal['batch_results'].items():
             self.assertIn('result_package', child_job)
             self.assertEqual(child_id, child_job['result_package']['run_context']['job_id'])
+        self.assertIn('report_ref', retVal)
+        self.assertTrue(retVal['report_ref'].startswith(str(self.get_ws_id())))
+        self.assertIn('report_name', retVal)
+        self.assertTrue(retVal['report_name'].startswith('batch_report_'))
