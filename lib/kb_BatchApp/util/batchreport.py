@@ -39,11 +39,11 @@ def write_html(report_dir, results, batch_size):
 
     job_id_1    final_state    module   method  version
     """
-    total_line = "<div><b>{}</b> total jobs were submitted</div>".format(batch_size)
+    total_line = "<div><b>{}</b> jobs were submitted</div>".format(batch_size)
     num_fail = count_fails(results)
     fail_line = "<div><b>{}</b> jobs were unable to complete (not counting retries)</div>".format(num_fail)
     run_time = calc_run_time(results)
-    runtime_line = "<div>Approximately {} cumulative runtime (walltime)</div>".format(run_time)
+    runtime_line = "<div>Approximately <b>{}</b> cumulative runtime (walltime)</div>".format(run_time)
 
     header = "<div style='padding: 5px 0'>{}{}{}</div>".format(total_line, fail_line, runtime_line)
 
@@ -59,9 +59,11 @@ def write_html(report_dir, results, batch_size):
         job_rows.append("<tr><td>{}</td></tr>".format("</td><td>".join([job_id, final_status, app_id, app_version])))
 
     table_header = "<tr><th>Job id</th><th>Final status</th><th>App id</th><th>Module version</th></tr>\n"
-    job_table = "<table>{}{}</table>".format(table_header, "\n".join(job_rows))
+    job_table = "<table class='table table-striped table-bordered'>{}{}</table>".format(table_header, "\n".join(job_rows))
 
-    html_content = "<html>{}<br>{}</html>".format(header, job_table)
+    html_head = '<head><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"></head>'
+
+    html_content = "<html>\n{}\n<body>{}<br>{}</body></html>".format(html_head, header, job_table)
 
     with open(html_file_path, "w") as outfile:
         outfile.write(html_content)
